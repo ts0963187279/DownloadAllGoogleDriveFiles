@@ -17,17 +17,16 @@ package com.walton.java.example;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.*;
 import com.walton.java.GoogleDriveForJava.model.DownloadInfo;
 import com.walton.java.GoogleDriveForJava.model.FileInfo;
 import com.walton.java.GoogleDriveForJava.processor.*;
 import com.walton.java.accessgoogleservice.module.OAuth2Data;
 import com.walton.java.accessgoogleservice.processor.*;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class Main{
     public static void main(String[] args) throws IOException {
