@@ -24,6 +24,7 @@ import com.walton.java.accessgoogleservice.module.OAuth2Data;
 import com.walton.java.accessgoogleservice.processor.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -55,23 +56,15 @@ public class Main{
             refreshTokenStorage.update(oAuth2Data.getUserName(), refreshToken);
         }
         accessToken = getAccessToken.execute(refreshToken);
-
         GetGoogleCredential getGoogleCredential = new GetGoogleCredential(oAuth2Data);
         GoogleCredential credential = getGoogleCredential.execute(accessToken);
         GetDriveService getDriveService = new GetDriveService(oAuth2Data);
         Drive driveService = getDriveService.execute(credential);
-        Map<String,FileInfo> files;
         GetFolderMap getFolderMap = new GetFolderMap();
         GetDriveAllFilesMap getDriveAllFilesMap = new GetDriveAllFilesMap(driveService);
-        files = getDriveAllFilesMap.execute(getFolderMap.execute(driveService));
-        for(Map.Entry<String,FileInfo> entry:files.entrySet()){
-            SearchDirectory searchDirectory = new SearchDirectory(files);
-            String directory = searchDirectory.execute(entry.getValue());
-            DownloadInfo downloadInfo = new DownloadInfo();
-            downloadInfo.setFileInfo(entry.getValue());
-            downloadInfo.setDirectory(directory);
-            DownloadDriveFile downloadDriveFile = new DownloadDriveFile(driveService);
-            downloadDriveFile.execute(downloadInfo);
-        }
+        Map<String,FileInfo> files = getDriveAllFilesMap.execute(getFolderMap.execute(driveService));
+        List<DownloadInfo> downloadInfoList = new TearDownStringFileInfoMap().execute(files);
+        DownloadDriveFiles downloadDriveFiles = new DownloadDriveFiles(driveService);
+        downloadDriveFiles.execute(downloadInfoList);
     }
 }

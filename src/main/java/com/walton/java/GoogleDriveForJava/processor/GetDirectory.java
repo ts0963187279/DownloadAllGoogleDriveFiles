@@ -22,30 +22,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SearchDirectory implements Mission<FileInfo>{
-    private Map<String,FileInfo> files;
+public class GetDirectory implements Mission<FileInfo>{
+    private Map<String,FileInfo> stringFileInfoMap;
     private String path = "GoogleDrive/";
-    public SearchDirectory(Map<String,FileInfo> files){
-        this.files = files;
+    public GetDirectory(Map<String,FileInfo> stringFileInfoMap){
+        this.stringFileInfoMap = stringFileInfoMap;
     }
     @Override
     public String execute(FileInfo fileInfo){
         List<String> directoryTmp = new ArrayList<String>();
         try{
-            FileInfo parentInfo = files.get(fileInfo.getParentId());
+            FileInfo parentInfo = stringFileInfoMap.get(fileInfo.getParentId());
             int i;
             for(i=0;!parentInfo.isParentIsRoot();i++) {
                 directoryTmp.add(parentInfo.getTitle());
-                parentInfo = files.get(parentInfo.getParentId());
+                parentInfo = stringFileInfoMap.get(parentInfo.getParentId());
             }
             directoryTmp.add(parentInfo.getTitle());
-            parentInfo = files.get(parentInfo.getParentId());
+            parentInfo = stringFileInfoMap.get(parentInfo.getParentId());
             directoryTmp.add(parentInfo.getTitle());
             for(int j=i+1;j>=0;j--)
                 path += directoryTmp.get(j)+"/";
         }catch (NullPointerException e){
             try {
-                path += files.get(fileInfo.getParentId()).getTitle() + "/";
+                path += stringFileInfoMap.get(fileInfo.getParentId()).getTitle() + "/";
             }catch (NullPointerException e1){
                 return path;
             }
