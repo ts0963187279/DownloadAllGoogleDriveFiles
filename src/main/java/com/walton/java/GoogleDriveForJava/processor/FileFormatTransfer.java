@@ -21,7 +21,7 @@ import poisondog.core.Mission;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IdentifyConversionFormat implements Mission<String>{
+public class FileFormatTransfer implements Mission<String>{
     /**
      * https://developers.google.com/drive/v3/web/manage-downloads
     **/

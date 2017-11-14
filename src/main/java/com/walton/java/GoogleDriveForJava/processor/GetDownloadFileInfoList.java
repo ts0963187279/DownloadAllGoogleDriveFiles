@@ -15,25 +15,27 @@
  */
 package com.walton.java.GoogleDriveForJava.processor;
 
-import com.walton.java.GoogleDriveForJava.model.DownloadInfo;
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.DownloadFileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import poisondog.core.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TearDownStringFileInfoMap implements Mission<Map<String,FileInfo>>{
+public class GetDownloadFileInfoList implements Mission<Map<String,SearchFileInfo>>{
     @Override
-    public List<DownloadInfo> execute(Map<String, FileInfo> stringFileInfoMap){
-        List<DownloadInfo> downloadInfoList = new ArrayList<DownloadInfo>();
-        for(Map.Entry<String,FileInfo> entry : stringFileInfoMap.entrySet()){
-            DownloadInfo downloadInfo = new DownloadInfo();
+    public List<DownloadFileInfo> execute(Map<String, SearchFileInfo> stringFileInfoMap){
+        List<DownloadFileInfo> downloadFileInfoList = new ArrayList<DownloadFileInfo>();
+        for(Map.Entry<String,SearchFileInfo> entry : stringFileInfoMap.entrySet()){
+            DownloadFileInfo downloadFileInfo = new DownloadFileInfo();
             String directory = new GetDirectory(stringFileInfoMap).execute(entry.getValue());
-            downloadInfo.setDirectory(directory);
-            downloadInfo.setFileInfo(entry.getValue());
-            downloadInfoList.add(downloadInfo);
+            downloadFileInfo.setDirectory(directory);
+            downloadFileInfo.setId(entry.getValue().getId());
+            downloadFileInfo.setMimeType(entry.getValue().getMimeType());
+            downloadFileInfo.setTitle(entry.getValue().getTitle());
+            downloadFileInfoList.add(downloadFileInfo);
         }
-        return downloadInfoList;
+        return downloadFileInfoList;
     }
 }

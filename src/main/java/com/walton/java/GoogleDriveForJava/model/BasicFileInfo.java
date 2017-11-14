@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 package com.walton.java.GoogleDriveForJava.model;
-public class FileFormatInfo {
-    private String correspondingMimeType;
-    private String extension;
 
-    public void setCorrespondingMimeType(String correspondingMimeType) {
-        this.correspondingMimeType = correspondingMimeType;
+public class BasicFileInfo {
+    private String id;
+    private String title;
+    private String mimeType;
+
+    public void setTitle(String title) {
+        this.title = title;
     }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
-
-    public String getCorrespondingMimeType() {
-        return correspondingMimeType;
+    public void setId(String id) {
+        this.id = id;
     }
-
-    public String getExtension() {
-        return extension;
+    public String getId() {
+        return id;
+    }
+    public String getMimeType() {
+        return mimeType;
+    }
+    public String getTitle() {
+        return title;
     }
 }

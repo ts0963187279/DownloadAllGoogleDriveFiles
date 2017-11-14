@@ -17,8 +17,8 @@ package com.walton.java.example;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.drive.Drive;
-import com.walton.java.GoogleDriveForJava.model.DownloadInfo;
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.DownloadFileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import com.walton.java.GoogleDriveForJava.processor.*;
 import com.walton.java.accessgoogleservice.module.OAuth2Data;
 import com.walton.java.accessgoogleservice.processor.*;
@@ -60,11 +60,14 @@ public class Main{
         GoogleCredential credential = getGoogleCredential.execute(accessToken);
         GetDriveService getDriveService = new GetDriveService(oAuth2Data);
         Drive driveService = getDriveService.execute(credential);
-        GetFolderMap getFolderMap = new GetFolderMap();
+
+        GetFolderList getFolderList = new GetFolderList();
         GetDriveAllFilesMap getDriveAllFilesMap = new GetDriveAllFilesMap(driveService);
-        Map<String,FileInfo> files = getDriveAllFilesMap.execute(getFolderMap.execute(driveService));
-        List<DownloadInfo> downloadInfoList = new TearDownStringFileInfoMap().execute(files);
+        Map<String,SearchFileInfo> files = getDriveAllFilesMap.execute(getFolderList.execute(driveService));
+        List<DownloadFileInfo> downloadFileInfoList = new GetDownloadFileInfoList().execute(files);
         DownloadDriveFiles downloadDriveFiles = new DownloadDriveFiles(driveService);
-        downloadDriveFiles.execute(downloadInfoList);
+        for(DownloadFileInfo downloadFileInfo : downloadFileInfoList) {
+            downloadDriveFiles.execute(downloadFileInfo);
+        }
     }
 }

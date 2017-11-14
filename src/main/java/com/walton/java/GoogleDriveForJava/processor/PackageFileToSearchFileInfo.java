@@ -19,32 +19,32 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentList;
 import com.google.api.services.drive.model.ParentReference;
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import poisondog.core.Mission;
 
 import java.io.IOException;
 
-public class PackageFileToFileInfo implements Mission<File> {
+public class PackageFileToSearchFileInfo implements Mission<File> {
     private Drive drive;
-    public PackageFileToFileInfo(Drive drive){
+    public PackageFileToSearchFileInfo(Drive drive){
         this.drive = drive;
     }
     @Override
-    public FileInfo execute(File file){
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setTitle(file.getTitle());
-        fileInfo.setMimeType(file.getMimeType());
-        fileInfo.setId(file.getId());
+    public SearchFileInfo execute(File file){
+        SearchFileInfo searchFileInfo = new SearchFileInfo();
+        searchFileInfo.setTitle(file.getTitle());
+        searchFileInfo.setMimeType(file.getMimeType());
+        searchFileInfo.setId(file.getId());
         ParentList parentList = null;
         try {
             parentList = drive.parents().list(file.getId()).execute();
             for(ParentReference parentReference : parentList.getItems()){
-                fileInfo.setParentId(parentReference.getId());
-                fileInfo.setParentIsRoot(parentReference.getIsRoot());
+                searchFileInfo.setParentId(parentReference.getId());
+                searchFileInfo.setParentIsRoot(parentReference.getIsRoot());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return fileInfo;
+        return searchFileInfo;
     }
 }

@@ -16,7 +16,7 @@
 package com.walton.java.GoogleDriveForJava.processor;
 
 
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,24 +26,24 @@ import java.util.TreeMap;
 public class GetDirectoryTest {
     @Test
     public void testExecute(){
-        Map<String,FileInfo> stubFiles = new TreeMap<String,FileInfo>();
-        FileInfo fileR = new FileInfo();
+        Map<String,SearchFileInfo> stubFiles = new TreeMap<String,SearchFileInfo>();
+        SearchFileInfo fileR = new SearchFileInfo();
         fileR.setTitle("R");
         fileR.setId("R");
         stubFiles.put("R",fileR);
-        FileInfo fileA = new FileInfo();
+        SearchFileInfo fileA = new SearchFileInfo();
         fileA.setParentIsRoot(true);
         fileA.setTitle("A");
         fileA.setId("A");
         fileA.setParentId("R");
         stubFiles.put("A",fileA);
-        FileInfo fileB = new FileInfo();
+        SearchFileInfo fileB = new SearchFileInfo();
         fileB.setTitle("B");
         fileB.setId("B");
         fileB.setParentIsRoot(false);
         fileB.setParentId("A");
         stubFiles.put("B",fileB);
-        FileInfo fileC = new FileInfo();
+        SearchFileInfo fileC = new SearchFileInfo();
         fileC.setTitle("C");
         fileC.setId("C");
         fileC.setParentIsRoot(false);
@@ -51,7 +51,7 @@ public class GetDirectoryTest {
         String expected = "GoogleDrive/R/A/B/";
         String actual = new GetDirectory(stubFiles).execute(fileC);
         Assert.assertEquals(expected,actual);
-        stubFiles = new TreeMap<String,FileInfo>();
+        stubFiles = new TreeMap<String,SearchFileInfo>();
         stubFiles.put("R",fileR);
         stubFiles.put("A",fileA);
         expected = "GoogleDrive/R/";

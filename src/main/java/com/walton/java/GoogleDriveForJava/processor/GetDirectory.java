@@ -15,24 +15,24 @@
  */
 package com.walton.java.GoogleDriveForJava.processor;
 
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import poisondog.core.Mission;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GetDirectory implements Mission<FileInfo>{
-    private Map<String,FileInfo> stringFileInfoMap;
+public class GetDirectory implements Mission<SearchFileInfo>{
+    private Map<String,SearchFileInfo> stringFileInfoMap;
     private String path = "GoogleDrive/";
-    public GetDirectory(Map<String,FileInfo> stringFileInfoMap){
+    public GetDirectory(Map<String,SearchFileInfo> stringFileInfoMap){
         this.stringFileInfoMap = stringFileInfoMap;
     }
     @Override
-    public String execute(FileInfo fileInfo){
+    public String execute(SearchFileInfo searchFileInfo){
         List<String> directoryTmp = new ArrayList<String>();
         try{
-            FileInfo parentInfo = stringFileInfoMap.get(fileInfo.getParentId());
+            SearchFileInfo parentInfo = stringFileInfoMap.get(searchFileInfo.getParentId());
             int i;
             for(i=0;!parentInfo.isParentIsRoot();i++) {
                 directoryTmp.add(parentInfo.getTitle());
@@ -45,7 +45,7 @@ public class GetDirectory implements Mission<FileInfo>{
                 path += directoryTmp.get(j)+"/";
         }catch (NullPointerException e){
             try {
-                path += stringFileInfoMap.get(fileInfo.getParentId()).getTitle() + "/";
+                path += stringFileInfoMap.get(searchFileInfo.getParentId()).getTitle() + "/";
             }catch (NullPointerException e1){
                 return path;
             }

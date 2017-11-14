@@ -18,43 +18,40 @@ package com.walton.java.GoogleDriveForJava.processor;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import com.walton.java.GoogleDriveForJava.model.FileInfo;
+import com.walton.java.GoogleDriveForJava.model.SearchFileInfo;
 import poisondog.core.Mission;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GetFolderMap implements Mission<Drive>{
+public class GetFolderList implements Mission<Drive>{
     @Override
-    public Map<String,FileInfo> execute(Drive drive){
+    public List<SearchFileInfo> execute(Drive drive){
         String search = "mimeType = 'application/vnd.google-apps.folder'";
         FileList fileList = null;
-        Map<String,FileInfo> folderInfoMap;
+        List<SearchFileInfo> folderInfoList;
         try {
             fileList = drive.files().list().setQ(search).execute();
-            folderInfoMap = new HashMap<String,FileInfo>();
+            folderInfoList = new ArrayList<SearchFileInfo>();
             GetRootFolder getRootFolder = new GetRootFolder();
             File root = getRootFolder.execute(drive);
-            FileInfo rootInfo = new FileInfo();
+            SearchFileInfo rootInfo = new SearchFileInfo();
             rootInfo.setParentId(null);
             rootInfo.setId(root.getId());
             rootInfo.setMimeType(root.getMimeType());
             rootInfo.setTitle("MyGoogleDrive");
             rootInfo.setParentIsRoot(true);
-            folderInfoMap.put(root.getId(),rootInfo);
-            PackageFileToFileInfo packageFileToFileInfo = new PackageFileToFileInfo(drive);
+            folderInfoList.add(rootInfo);
+            PackageFileToSearchFileInfo packageFileToSearchFileInfo = new PackageFileToSearchFileInfo(drive);
             for(File file :fileList.getItems()){
-                FileInfo fileInfo = packageFileToFileInfo.execute(file);
-                folderInfoMap.put(file.getId(),fileInfo);
+                SearchFileInfo searchFileInfo = packageFileToSearchFileInfo.execute(file);
+                folderInfoList.add(searchFileInfo);
             }
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        for(Map.Entry<String,FileInfo> entry : folderInfoMap.entrySet()){
-            System.out.println("folder : " + entry.getValue().getTitle());
-        }
-        return folderInfoMap;
+        return folderInfoList;
     }
 }
