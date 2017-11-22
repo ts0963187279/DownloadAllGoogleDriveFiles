@@ -28,7 +28,6 @@ public class GetDirectory implements Mission<SearchFileInfo>{
     public GetDirectory(Map<String,SearchFileInfo> stringFileInfoMap){
         this.stringFileInfoMap = stringFileInfoMap;
     }
-    @Override
     public String execute(SearchFileInfo searchFileInfo){
         List<String> directoryTmp = new ArrayList<String>();
         try{

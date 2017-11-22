@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GetDownloadFileInfoList implements Mission<Map<String,SearchFileInfo>>{
-    @Override
     public List<DownloadFileInfo> execute(Map<String, SearchFileInfo> stringFileInfoMap){
         List<DownloadFileInfo> downloadFileInfoList = new ArrayList<DownloadFileInfo>();
         for(Map.Entry<String,SearchFileInfo> entry : stringFileInfoMap.entrySet()){

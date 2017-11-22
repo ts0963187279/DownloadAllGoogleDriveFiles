@@ -27,19 +27,23 @@ import java.io.OutputStream;
 
 public class DownloadDriveFiles implements Mission<DownloadFileInfo>{
     private Drive drive;
+    private String systemDirectory = "";
     public DownloadDriveFiles(Drive drive){
         this.drive = drive;
     }
-    @Override
+    public void setSystemDirectory(String systemDirectory) {
+        this.systemDirectory = systemDirectory;
+    }
     public Void execute(DownloadFileInfo downloadFileInfo){
         String directory = downloadFileInfo.getDirectory();
-        String path = directory + "/" + downloadFileInfo.getTitle();
+        String path = systemDirectory + directory + "/" + downloadFileInfo.getTitle();
         try {
             CreateDirectory createDirectory = new CreateDirectory();
-            createDirectory.execute(directory);
+            createDirectory.execute(systemDirectory + directory);
             FileFormatTransfer fileFormatTransfer = new FileFormatTransfer();
             FileFormatInfo fileFormatInfo = fileFormatTransfer.execute(downloadFileInfo.getMimeType());
             String correspondingMimeType = fileFormatInfo.getCorrespondingMimeType();
+            System.out.println("Start download" +downloadFileInfo.getTitle());
             if (correspondingMimeType == null) {
                 File file = new File(path);
                 OutputStream outputStream = new FileOutputStream(file);

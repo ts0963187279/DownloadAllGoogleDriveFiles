@@ -15,13 +15,15 @@
  */
 package com.walton.java.GoogleDriveForJava.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BasicFileInfo {
     private String id;
     private String title;
     private String mimeType;
-
     public void setTitle(String title) {
-        this.title = title;
+        this.title = keywordFullWidthConverter(title);
     }
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
@@ -37,5 +39,21 @@ public class BasicFileInfo {
     }
     public String getTitle() {
         return title;
+    }
+    private String keywordFullWidthConverter(String str){
+        Map<Character,Character> keywordMap = new HashMap<Character, Character>();
+        keywordMap.put('/','／');
+        keywordMap.put('|','｜');
+        keywordMap.put('\\','＼');
+        keywordMap.put('?','？');
+        keywordMap.put('\"','“');
+        keywordMap.put('*','＊');
+        keywordMap.put(':','：');
+        keywordMap.put('>','＞');
+        keywordMap.put('<','＜');
+        for(Map.Entry<Character,Character> keySet: keywordMap.entrySet()){
+            str = str.replace(keySet.getKey(),keySet.getValue());
+        }
+        return str;
     }
 }
