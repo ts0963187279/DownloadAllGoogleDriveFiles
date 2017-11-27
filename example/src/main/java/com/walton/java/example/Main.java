@@ -24,10 +24,7 @@ import com.walton.java.accessgoogleservice.module.OAuth2Data;
 import com.walton.java.accessgoogleservice.processor.*;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main{
     public static void main(String[] args) throws IOException {
@@ -62,12 +59,17 @@ public class Main{
         Drive driveService = getDriveService.execute(credential);
 
         GetFolderList getFolderList = new GetFolderList();
-        GetDriveAllFilesMap getDriveAllFilesMap = new GetDriveAllFilesMap(driveService);
-        Map<String,SearchFileInfo> files = getDriveAllFilesMap.execute(getFolderList.execute(driveService));
+        GetDriveFilesMap getDriveFilesMap = new GetDriveFilesMap(driveService);
+        List<SearchFileInfo> folderList = getFolderList.execute(driveService);
+        Map<String,SearchFileInfo> files = new HashMap<String, SearchFileInfo>();
+        for(SearchFileInfo folder:folderList){
+            files.putAll(getDriveFilesMap.execute(folder));
+        }
         List<DownloadFileInfo> downloadFileInfoList = new GetDownloadFileInfoList().execute(files);
-        DownloadDriveFiles downloadDriveFiles = new DownloadDriveFiles(driveService);
+        DownloadDriveFile downloadDriveFile = new DownloadDriveFile(driveService);
+        downloadDriveFile.setPath("./GoogleDrive");
         for(DownloadFileInfo downloadFileInfo : downloadFileInfoList) {
-            downloadDriveFiles.execute(downloadFileInfo);
+            downloadDriveFile.execute(downloadFileInfo);
         }
     }
 }

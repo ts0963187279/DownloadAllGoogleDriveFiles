@@ -27,30 +27,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetDriveAllFilesMap implements Mission<List<SearchFileInfo>>{
+public class GetDriveFilesMap implements Mission<SearchFileInfo>{
     private Drive drive;
-    public GetDriveAllFilesMap(Drive drive){
+    public GetDriveFilesMap(Drive drive){
         this.drive = drive;
     }
-    public Map<String,SearchFileInfo> execute(List<SearchFileInfo> folderInfoList){
+    public Map<String,SearchFileInfo> execute(SearchFileInfo folder){
         Map<String,SearchFileInfo> fileInfoMap = new HashMap<String,SearchFileInfo>();
         PackageFileToSearchFileInfo packageFileToSearchFileInfo = new PackageFileToSearchFileInfo(drive);
-        for(SearchFileInfo folderInfo: folderInfoList){
-            System.out.println("folder : " + folderInfo.getTitle() + "'s child :");
-            fileInfoMap.put(folderInfo.getId(),folderInfo);
-            ChildList childList;
-            try {
-                childList = drive.children().list(folderInfo.getId()).execute();
-                for(ChildReference childReference : childList.getItems()){
-                    String childId = childReference.getId();
-                    File file = drive.files().get(childId).execute();
-                    System.out.println("    file name : " +file.getTitle() +"  mime type : "+file.getMimeType());
-                    SearchFileInfo searchFileInfo = packageFileToSearchFileInfo.execute(file);
-                    fileInfoMap.put(searchFileInfo.getId(), searchFileInfo);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        fileInfoMap.put(folder.getId(),folder);
+        ChildList childList;
+        try {
+            childList = drive.children().list(folder.getId()).execute();
+            for(ChildReference childReference : childList.getItems()){
+                String childId = childReference.getId();
+                File file = drive.files().get(childId).execute();
+                SearchFileInfo searchFileInfo = packageFileToSearchFileInfo.execute(file);
+                fileInfoMap.put(searchFileInfo.getId(), searchFileInfo);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return fileInfoMap;
     }

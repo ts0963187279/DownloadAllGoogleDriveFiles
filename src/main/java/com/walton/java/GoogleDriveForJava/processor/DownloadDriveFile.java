@@ -25,13 +25,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class DownloadDriveFiles implements Mission<DownloadFileInfo>{
+public class DownloadDriveFile implements Mission<DownloadFileInfo>{
     private Drive drive;
     private String systemDirectory = "";
-    public DownloadDriveFiles(Drive drive){
+    public DownloadDriveFile(Drive drive){
         this.drive = drive;
     }
-    public void setSystemDirectory(String systemDirectory) {
+    public void setPath(String systemDirectory) {
         this.systemDirectory = systemDirectory;
     }
     public Void execute(DownloadFileInfo downloadFileInfo){
@@ -43,7 +43,6 @@ public class DownloadDriveFiles implements Mission<DownloadFileInfo>{
             FileFormatTransfer fileFormatTransfer = new FileFormatTransfer();
             FileFormatInfo fileFormatInfo = fileFormatTransfer.execute(downloadFileInfo.getMimeType());
             String correspondingMimeType = fileFormatInfo.getCorrespondingMimeType();
-            System.out.println("Start download" +downloadFileInfo.getTitle());
             if (correspondingMimeType == null) {
                 File file = new File(path);
                 OutputStream outputStream = new FileOutputStream(file);
@@ -56,11 +55,7 @@ public class DownloadDriveFiles implements Mission<DownloadFileInfo>{
                 OutputStream outputStream = new FileOutputStream(file);
                 drive.files().export(downloadFileInfo.getId(), correspondingMimeType).executeMediaAndDownloadTo(outputStream);
             }
-            System.out.println("download " + downloadFileInfo.getTitle() + " done!");
         } catch (IOException e) {
-            System.out.println("exception");
-            System.out.println(downloadFileInfo.getTitle());
-            System.out.println(downloadFileInfo.getMimeType());
             e.printStackTrace();
         }
         return null;
