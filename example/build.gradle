@@ -2,11 +2,15 @@ group 'GoogleDriveForJava'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-sourceCompatibility = 1.5
+sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
+	maven{
+		url "https://dl.bintray.com/poisondog/poisondog"
+	}
 }
+
 jar{
     manifest{
         attributes 'Main-Class':'com.walton.java.example.Main'
